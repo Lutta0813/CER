@@ -1,6 +1,7 @@
 import tkinter as tk
 import requests
 from bs4 import BeautifulSoup
+import time
 
 def get_url():
     url = 'https://rate.bot.com.tw/xrt?Lang=zh-TW'
@@ -13,17 +14,16 @@ def get_url():
 
 
 def get_exchange_data(soup):
-    exchange_rate = {}
     # 0 = USD
     # 7 = JPY
     # 8 = ZAR
     # 14 = EUR
-    USD = soup.select('tbody')[0].select('tr')[0].select('td')[4].text
-    JPY = soup.select('tbody')[0].select('tr')[7].select('td')[4].text
-    ZAR = soup.select('tbody')[0].select('tr')[8].select('td')[4].text
-    EUR = soup.select('tbody')[0].select('tr')[14].select('td')[4].text
+    USD = float(soup.select('tbody')[0].select('tr')[0].select('td')[4].text)
+    JPY = float(soup.select('tbody')[0].select('tr')[7].select('td')[4].text)
+    ZAR = float(soup.select('tbody')[0].select('tr')[8].select('td')[4].text)
+    EUR = float(soup.select('tbody')[0].select('tr')[14].select('td')[4].text)
 
-    print(USD, JPY, ZAR, EUR)
+    return USD, JPY, ZAR, EUR
     
 
 
@@ -39,12 +39,50 @@ def main():
         mtcu.config(text=selection)
 
 
-    def testbuttonfunc():
-        label_op.config(text='i got huge dick')
+    def exchange():
+        try:
+            count = float(entryOriCurreny.get())
+            ori_currency = var.get()
+            tar_currency = var_target.get()
+            twd_total = 0
+            final_count = 0
+
+            if ori_currency == 'USD':
+                twd_total = count * usd
+            elif ori_currency == 'TWD':
+                twd_total = count
+            elif ori_currency == 'JPY':
+                twd_total = count * jpy
+            elif ori_currency == 'ZAR':
+                twd_total = count * zar
+            elif ori_currency == 'EUR':
+                twd_total = count * eur
+            else:
+                label_op.config(text='請選擇正確兌換貨幣')
+
+            if tar_currency == 'USD':
+                final_count = round(twd_total / usd, 3)
+            elif tar_currency == 'TWD':
+                final_count = round(twd_total, 3)
+            elif tar_currency == 'JPY':
+                final_count = round(twd_total / jpy, 3)
+            elif tar_currency == 'ZAR':
+                final_count = round(twd_total / zar, 3)
+            elif tar_currency == 'EUR':
+                final_count = round(twd_total / eur, 3)
+            else:
+                label_op.config(text='請選擇正確目標貨幣')
+
+            if ori_currency and tar_currency != '':
+                label_op.config(text='您要兌換的貨幣為：' + str(count) + ' (' + ori_currency + ')' + '\n' + '\n兌換後金額為：' + str(final_count) + ' (' + tar_currency + ')')
+        
+        except ValueError:
+            label_op.config(text='請輸入正確資訊')
 
 
+    # 獲取twb即期賣出匯率
     get_url()
-    get_exchange_data(get_url())
+    usd, jpy, zar, eur = get_exchange_data(get_url())
 
     root = tk.Tk()
     root.title('Currency Exchange Rate Calculator')
@@ -92,7 +130,7 @@ def main():
 
     # 確認換算按鈕
 
-    button = tk.Button(frameTop, text='開始換算', command=testbuttonfunc)
+    button = tk.Button(frameTop, text='開始換算', command=exchange)
     button.pack(side='right')
 
     # 下方的frame
@@ -103,8 +141,10 @@ def main():
     label_op = tk.Label(frameLower, bg='white', bd=5)
     label_op.place(relwidth=1, relheight=0.5)
 
+    #當前時間
+    ct = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
     #輸出當前匯率
-    label_rate = tk.Label(frameLower, bg='pink', bd=5)
+    label_rate = tk.Label(frameLower, bg='pink', bd=5, text='目前即期匯率為：\n美金：'+str(usd)+'\n日幣：'+str(jpy)+'\n南非幣：'+str(zar)+'\n歐元：'+str(eur)+'\n時間：'+ct)
     label_rate.place(relwidth=1, relheight=0.5,rely=0.5)
 
     root.mainloop()
