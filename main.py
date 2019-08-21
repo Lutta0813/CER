@@ -18,10 +18,10 @@ def get_exchange_data(soup):
     # 7 = JPY
     # 8 = ZAR
     # 14 = EUR
-    USD = float(soup.select('tbody')[0].select('tr')[0].select('td')[4].text)
-    JPY = float(soup.select('tbody')[0].select('tr')[7].select('td')[4].text)
+    USD = float(soup.select('tbody')[0].select('tr')[0].select('td')[2].text)
+    JPY = float(soup.select('tbody')[0].select('tr')[7].select('td')[2].text)
     ZAR = float(soup.select('tbody')[0].select('tr')[8].select('td')[4].text)
-    EUR = float(soup.select('tbody')[0].select('tr')[14].select('td')[4].text)
+    EUR = float(soup.select('tbody')[0].select('tr')[14].select('td')[2].text)
 
     return USD, JPY, ZAR, EUR
     
@@ -80,7 +80,7 @@ def main():
             label_op.config(text='請輸入正確資訊')
 
 
-    # 獲取twb即期賣出匯率
+    # 獲取bank of taiwan即期賣出匯率
     get_url()
     usd, jpy, zar, eur = get_exchange_data(get_url())
 
@@ -144,7 +144,7 @@ def main():
     #當前時間
     ct = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
     #輸出當前匯率
-    label_rate = tk.Label(frameLower, bg='pink', bd=5, text='目前即期匯率為：\n美金：'+str(usd)+'\n日幣：'+str(jpy)+'\n南非幣：'+str(zar)+'\n歐元：'+str(eur)+'\n時間：'+ct)
+    label_rate = tk.Label(frameLower, bg='pink', bd=5, text='目前現金匯率為(臺幣)：\n美金：'+str(usd)+'\n日幣：'+str(jpy)+'\n南非幣（臺灣銀行無南非幣現金匯率，故以即期匯率計算）：'+str(zar)+'\n歐元：'+str(eur)+'\n時間：'+ct)
     label_rate.place(relwidth=1, relheight=0.5,rely=0.5)
 
     root.mainloop()
