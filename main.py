@@ -59,4 +59,39 @@ mtcu.menu.add_radiobutton(label='南非幣', variable=var_target, value='ZAR', c
 button = tk.Button(frameTop, text='開始換算')
 button.pack(side='right')
 
+# 下方的frame
+frameLower = tk.Frame(root, bg='#8debe0', bd=10)
+frameLower.place(relx=0.1, rely=0.25,relwidth=0.8, relheight=0.6)
+
+# 輸出換算結果
+label_op = tk.Label(frameLower, bg='white', bd=5)
+label_op.place(relwidth=1, relheight=1)
+
+
+
+
 root.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
